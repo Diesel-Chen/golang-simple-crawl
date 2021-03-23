@@ -5,11 +5,10 @@ import (
 	"golang-simple-crawl/zhenai/parser"
 )
 
-func main(){
+func main() {
 	engine.Run(engine.Request{
-		Url: "https://www.zhenai.com/zhenghun",
+		Url:        "https://www.zhenai.com/zhenghun",
 		ParserFunc: parser.ParserCityList,
 	})
 
 }
-
