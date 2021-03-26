@@ -11,7 +11,12 @@ func ParserCityList(contents []byte) engine.RequestResult {
 	reg := regexp.MustCompile(regCityList)
 	resp := reg.FindAllSubmatch(contents, -1)
 	result := engine.RequestResult{}
+	limit := 10
 	for _, val := range resp {
+		if limit == 0 {
+			break
+		}
+		limit--
 		result.Items = append(result.Items, "cityName "+string(val[2]))
 		result.Requests = append(result.Requests, engine.Request{
 			Url:        string(val[1]),
