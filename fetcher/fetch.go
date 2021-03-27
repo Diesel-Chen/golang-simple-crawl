@@ -3,23 +3,29 @@ package fetcher
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"math/rand"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 )
 
-const tmpCookie = "sid=b6ac8ebe-f1d7-45de-8071-460194548fd4; ec=g5s2spdj-1616480328670-d49e7f968231c1248756317; Hm_lvt_2c8ad67df9e787ad29dbd54ee608f5d2=1616480336; FSSBBIl1UgzbN7NO=5OlFjG_.fxShf3yo9inUrzz7ACHfPwtA6qpHzla3aAwR6z1hDQfb6OXVwrdqK2vml0aQ5Y1CEQ83srv.hHQZT4G; Hm_lpvt_2c8ad67df9e787ad29dbd54ee608f5d2=1616772650; _efmdata=krmqwcCi5F6JC0fs0IU3OI83eFfH6kQ%2BeeLWsRiRLHuQAwAXcfd%2Bst7vGR6sJpCvIlB3r5nbgsZVZyAYktQU4wjt3VYez2ylOiPl0uQqKjk%3D; _exid=ZBRMpi8orCq3GQ5noR%2BqjrOejq6YLP2wRUxLQjHKjTD7YU%2BP9GOcBQaVAM2JFwsRglNQTFBJxIRE7mFKz3NsyA%3D%3D; FSSBBIl1UgzbN7NP=53m6eTKrwdwEqqqmgMnzwmAz9sZSHPF96tnd0I6mVVaBObuVGsTa5po.2lR2rO7Yi0yoJu5v_WyJQHttWEeCoesU6.yvBUx.RzgmxNAneyoMzNHRzBDPa216eGpCxMrYpLaqgX3WGVAHte2J_mmqwjhAO4lwoWBb9jvNbskrIWjHXnERYuFPm7790eAq.aDD_ZsmVINFP5RZCQialO.OxoN8ediLKFuikffNO1MyrI8XZANy8It2DxaJvUmrie45JzvSP8WVxPY0PiRaHFPo65F"
+const tmpCookie = "id=b6ac8ebe-f1d7-45de-8071-460194548fd4; ec=g5s2spdj-1616480328670-d49e7f968231c1248756317; Hm_lvt_2c8ad67df9e787ad29dbd54ee608f5d2=1616480336; FSSBBIl1UgzbN7NO=5OlFjG_.fxShf3yo9inUrzz7ACHfPwtA6qpHzla3aAwR6z1hDQfb6OXVwrdqK2vml0aQ5Y1CEQ83srv.hHQZT4G; _efmdata=krmqwcCi5F6JC0fs0IU3OI83eFfH6kQ%2BeeLWsRiRLHuQAwAXcfd%2Bst7vGR6sJpCvJwLcPqIhX2zJIS6OYve8mdHef1FZKGK93caRY8c%2F0Bw%3D; _exid=F44%2FkpLaNjBK7qjqFkOrangOoOTK7pwamqLPJREU2HIrT5IXCKq7akiJreyUdQGKZD%2B%2B3mxwRc5Tah%2Fv068nhg%3D%3D; Hm_lpvt_2c8ad67df9e787ad29dbd54ee608f5d2=1616859546; FSSBBIl1UgzbN7NP=53meiubrIs77qqqmgwDOYjAI9L8pNe3svGcwxUDk7u.xy0tlkwtybfON7MrdpssCWWDRadt_NNhrX5Gsa9TnssuU4YorQnFMn_xd2B.X4yD.NKVoD0EGAf0bzgH96liSin5G4W7kLJl3UUiLqhN7CDIjZJQ8eVfI5Js9wO87qvZTQoHBiE0Nfh4xvDf5EALCsKnYPpayZEUFLYzfu_6HjV1loyEGH49Tdrsom23DalTHjv0bi6dnhGq.eRIQtjC7AERx65bZufzblc6oH3PUHPuiqWO7sC4IOuDVLVURRwT4asC55v9fAWBoC5ubVoYhKa"
+
+var ProxyServer string
+var IpQueue []string
 
 func Fetch(url string) ([]byte, error) {
 	req, _ := http.NewRequest(http.MethodGet, url, nil)
 	req.Header.Add("User-Agent", RandomGetUA())
 
 	req.Header.Add("cookie", tmpCookie)
-
-	resp, err := http.DefaultClient.Do(req)
+	client := ProxyClient()
+	resp, err := client.Do(req)
 
 	if err != nil {
+		log.Printf("client.Do出错 返回码：")
 		return nil, err
 	}
 	defer resp.Body.Close()
@@ -29,11 +35,37 @@ func Fetch(url string) ([]byte, error) {
 	return ioutil.ReadAll(resp.Body)
 }
 func ProxyClient() http.Client {
-	ProxyServer := ""
+
+	go func() {
+		for {
+			time.Sleep(100 * time.Microsecond)
+			getRandomIp()
+		}
+	}()
+
 	proxyURL, _ := url.Parse(ProxyServer)
 
 	return http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxyURL)}}
+}
+func init() {
 
+	resp, err := http.Get("http://webapi.http.zhimacangku.com/getip?num=40&type=1&pro=&city=0&yys=0&port=1&time=1&ts=0&ys=0&cs=0&lb=6&sb=|&pb=4&mr=1&regions=")
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+	IpQueue = strings.Split(string(body), "|")
+	ProxyServer = IpQueue[0]
+}
+
+func getRandomIp() {
+	rand.Seed(time.Now().UnixNano())
+	target := IpQueue[rand.Intn(len(IpQueue))]
+	ProxyServer = "http://" + target
 }
 
 func RandomGetUA() string {
