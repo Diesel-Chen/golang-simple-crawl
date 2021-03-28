@@ -7,7 +7,7 @@ import (
 type SimpleEngine struct {
 }
 
-func (e SimpleEngine) Run(seed ...Request) {
+func (e *SimpleEngine) Run(seed ...Request) {
 	requests := make([]Request, 0)
 	for _, v := range seed {
 		requests = append(requests, v)

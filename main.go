@@ -4,19 +4,20 @@ import (
 	"golang-simple-crawl/engine"
 	"golang-simple-crawl/persist"
 	"golang-simple-crawl/scheduler"
-	"golang-simple-crawl/zhenai/parser"
+	parser2 "golang-simple-crawl/tupian/parser"
 )
 
 func main() {
 
 	e := &engine.ConcurrentEngine{
+		WorkerCount: 20ƒ,
 		Scheduler:   &scheduler.QueuedScheduler{},
-		WorkerCount: 100,
-		ItemChan:    persist.ItemSaver(),
+		ItemChan:    persist.PictureSaver(),
 	}
+	//e := &engine.SimpleEngine{}
 	e.Run(engine.Request{
-		Url:        "https://www.zhenai.com/zhenghun/",
-		ParserFunc: parser.ParserCityList,
+		Url:        "http://335pai.com/toukuizipai/index.html",
+		ParserFunc: parser2.ParserList,
 	})
 
 }
