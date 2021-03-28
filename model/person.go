@@ -2,7 +2,7 @@ package model
 
 type Person struct {
 	Name           string
-	Age            string
+	Age            int
 	Height         string
 	Weight         string
 	Constellation  string

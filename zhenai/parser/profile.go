@@ -4,12 +4,13 @@ import (
 	"golang-simple-crawl/engine"
 	"golang-simple-crawl/model"
 	"regexp"
+	"strconv"
 )
 
 //"basicInfo":["离异","49岁","天秤座(09.23-10.22)","158cm","58kg","工作地:合肥瑶海区","月收入:3千以下","自由职业","高中及以下"]
 //"basicInfo":["丧偶","33岁","天秤座(09.23-10.22)","158cm","工作地:广州花都区","月收入:8千-1.2万","经销商","大专"],
-var proReg = regexp.MustCompile(`"basicInfo":\["([^"]+)","(\d+岁)","([^"]+)","(\d+cm)","(\d+kg)","工作地:([^"]+)","月收入:([^"]+)","([^"]+)","([^"]+)"\]`)
-var proReg1 = regexp.MustCompile(`"basicInfo":\["([^"]+)","(\d+岁)","([^"]+)","(\d+cm)","工作地:([^"]+)","月收入:([^"]+)","([^"]+)","([^"]+)"\]`)
+var proReg = regexp.MustCompile(`"basicInfo":\["([^"]+)","(\d+)岁","([^"]+)","(\d+cm)","(\d+kg)","工作地:([^"]+)","月收入:([^"]+)","([^"]+)","([^"]+)"\]`)
+var proReg1 = regexp.MustCompile(`"basicInfo":\["([^"]+)","(\d+)岁","([^"]+)","(\d+cm)","工作地:([^"]+)","月收入:([^"]+)","([^"]+)","([^"]+)"\]`)
 var weightReg = regexp.MustCompile(`basicInfo":\[.+kg.+\]`)
 
 func ParserProfile(name string, cnt []byte) engine.RequestResult {
@@ -19,10 +20,11 @@ func ParserProfile(name string, cnt []byte) engine.RequestResult {
 	if len(isWeights) > 0 {
 		resps := proReg.FindAllSubmatch(cnt, -1)
 		for _, v := range resps {
+			age, _ := strconv.Atoi(string(v[2]))
 			p := model.Person{
 				Name:           name,
 				MarriageStatus: string(v[1]),
-				Age:            string(v[2]),
+				Age:            age,
 				Constellation:  string(v[3]),
 				Height:         string(v[4]),
 				Weight:         string(v[5]),
@@ -36,10 +38,11 @@ func ParserProfile(name string, cnt []byte) engine.RequestResult {
 	} else {
 		resps := proReg1.FindAllSubmatch(cnt, -1)
 		for _, v := range resps {
+			age, _ := strconv.Atoi(string(v[2]))
 			p := model.Person{
 				Name:           name,
 				MarriageStatus: string(v[1]),
-				Age:            string(v[2]),
+				Age:            age,
 				Constellation:  string(v[3]),
 				Height:         string(v[4]),
 				WorkStation:    string(v[5]),
