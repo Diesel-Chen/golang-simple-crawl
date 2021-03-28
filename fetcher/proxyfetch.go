@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-const tmpCookie = "id=b6ac8ebe-f1d7-45de-8071-460194548fd4; ec=g5s2spdj-1616480328670-d49e7f968231c1248756317; Hm_lvt_2c8ad67df9e787ad29dbd54ee608f5d2=1616480336; FSSBBIl1UgzbN7NO=5OlFjG_.fxShf3yo9inUrzz7ACHfPwtA6qpHzla3aAwR6z1hDQfb6OXVwrdqK2vml0aQ5Y1CEQ83srv.hHQZT4G; _efmdata=krmqwcCi5F6JC0fs0IU3OI83eFfH6kQ%2BeeLWsRiRLHuQAwAXcfd%2Bst7vGR6sJpCvJwLcPqIhX2zJIS6OYve8mdHef1FZKGK93caRY8c%2F0Bw%3D; _exid=F44%2FkpLaNjBK7qjqFkOrangOoOTK7pwamqLPJREU2HIrT5IXCKq7akiJreyUdQGKZD%2B%2B3mxwRc5Tah%2Fv068nhg%3D%3D; Hm_lpvt_2c8ad67df9e787ad29dbd54ee608f5d2=1616859546; FSSBBIl1UgzbN7NP=53meiubrIs77qqqmgwDOYjAI9L8pNe3svGcwxUDk7u.xy0tlkwtybfON7MrdpssCWWDRadt_NNhrX5Gsa9TnssuU4YorQnFMn_xd2B.X4yD.NKVoD0EGAf0bzgH96liSin5G4W7kLJl3UUiLqhN7CDIjZJQ8eVfI5Js9wO87qvZTQoHBiE0Nfh4xvDf5EALCsKnYPpayZEUFLYzfu_6HjV1loyEGH49Tdrsom23DalTHjv0bi6dnhGq.eRIQtjC7AERx65bZufzblc6oH3PUHPuiqWO7sC4IOuDVLVURRwT4asC55v9fAWBoC5ubVoYhKa"
+const tmpCookie = "sid=b6ac8ebe-f1d7-45de-8071-460194548fd4; ec=g5s2spdj-1616480328670-d49e7f968231c1248756317; Hm_lvt_2c8ad67df9e787ad29dbd54ee608f5d2=1616480336; FSSBBIl1UgzbN7NO=5OlFjG_.fxShf3yo9inUrzz7ACHfPwtA6qpHzla3aAwR6z1hDQfb6OXVwrdqK2vml0aQ5Y1CEQ83srv.hHQZT4G; Hm_lpvt_2c8ad67df9e787ad29dbd54ee608f5d2=1616945573; _efmdata=krmqwcCi5F6JC0fs0IU3OI83eFfH6kQ%2BeeLWsRiRLHuQAwAXcfd%2Bst7vGR6sJpCvD9Ed0YcSUw7uUs3bFmaOEGNDrwUa7K5uM4gAS1UD7fk%3D; _exid=jB7TDeeqsOp2OnuT3Ztwn4vlfohVRMRSVXz4fCy2bUBKBTtHxe%2FYWk%2Fa6J52Hfq94ZH6844hTcnbMGvYJmTgrQ%3D%3D; FSSBBIl1UgzbN7NP=53DcPiKrGLO3qqqmg8UbXjqKsy45DUSBND8S.JkopA6urQlQkPytSmv1Vbo9uc9GWYfHxRkGIONcwtPckjYgPeoXj90qhjFKzyu8mUB_j3NP_zl2uvHSdv5CXm1JVkkZ8gDTezdNTpDZ29eLvCk32eYFqTYuJYzEBq1Mjdj.jFnBMW_WQLRUfz0DhGK_tnZatF9yiKEcGsO3Tn3P8qIEyiXyfHvv5gUgyhxTzTonDKQPUyBstuB0b4LlgEHkVOCCkg"
 
 var ProxyServer string
 var IpQueue []string
@@ -49,16 +49,16 @@ func ProxyClient() http.Client {
 }
 func init() {
 
-	resp, err := http.Get("http://webapi.http.zhimacangku.com/getip?num=40&type=1&pro=&city=0&yys=0&port=1&time=1&ts=0&ys=0&cs=0&lb=6&sb=|&pb=4&mr=1&regions=")
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		panic(err)
-	}
-	IpQueue = strings.Split(string(body), "|")
+	//resp, err := http.Get("http://webapi.http.zhimacangku.com/getip?num=40&type=1&pro=&city=0&yys=0&port=1&time=1&ts=0&ys=0&cs=0&lb=6&sb=|&pb=4&mr=1&regions=")
+	//if err != nil {
+	//	panic(err)
+	//}
+	//defer resp.Body.Close()
+	//body, err := ioutil.ReadAll(resp.Body)
+	//if err != nil {
+	//	panic(err)
+	//}
+	IpQueue = strings.Split("49.87.133.239:4267|222.161.140.28:4278|113.141.222.241:4236|113.237.247.95:4252|117.95.46.6:4278|114.99.13.11:4225|111.173.38.129:4245|27.156.185.251:4235|117.95.1.216:4267|175.4.112.120:4230|115.209.126.169:4226|221.234.29.60:4245|119.52.132.20:4278|119.36.14.229:4213|42.84.163.8:4264|180.122.32.190:4226|125.87.89.130:4278|183.166.133.190:4214|111.127.116.141:4235|171.95.155.115:4284|", "|")
 	ProxyServer = IpQueue[0]
 }
 
