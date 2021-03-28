@@ -9,7 +9,7 @@ import (
 func Work(request Request) RequestResult {
 	request.Url = strings.Replace(request.Url, "http://", "https://", 1)
 	log.Printf("Fetch Url:%s", request.Url)
-	body, err := fetcher.Fetch(request.Url)
+	body, err := fetcher.ProxyFetch(request.Url)
 	if err != nil {
 		log.Printf("Fetch  url: %s  error %s:", request.Url, err)
 	}
