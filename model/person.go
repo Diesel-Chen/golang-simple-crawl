@@ -1,10 +1,12 @@
 package model
 
 type Person struct {
+	Id             string
+	Url            string
 	Name           string
 	Age            int
-	Height         string
-	Weight         string
+	Height         int
+	Weight         int
 	Constellation  string
 	Salary         string
 	Job            string

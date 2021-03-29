@@ -10,10 +10,12 @@ import (
 
 func TestSave(t *testing.T) {
 	excepted := model.Person{
+		Id:             "123123",
+		Url:            "http://test/123123",
 		Name:           "test",
 		Age:            18,
-		Height:         "160cm",
-		Weight:         "60kg",
+		Height:         160,
+		Weight:         60,
 		Constellation:  "处女座",
 		Salary:         "10000-20000",
 		Job:            "老师",
@@ -21,7 +23,7 @@ func TestSave(t *testing.T) {
 		WorkStation:    "上海",
 		MarriageStatus: "未婚",
 	}
-	id, err := save(excepted)
+	err := save(excepted)
 	if err != nil {
 		panic(err)
 	}
@@ -29,7 +31,7 @@ func TestSave(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	resp, err := client.Get().Index("crawl").Type("zhenai").Id(id).Do(context.Background())
+	resp, err := client.Get().Index("crawl").Type("zhenai").Id(excepted.Id).Do(context.Background())
 	var actual model.Person
 	json.Unmarshal(resp.Source, &actual)
 	if excepted != excepted {

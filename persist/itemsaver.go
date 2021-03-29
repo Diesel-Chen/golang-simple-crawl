@@ -3,6 +3,7 @@ package persist
 import (
 	"context"
 	"github.com/olivere/elastic/v7"
+	"golang-simple-crawl/model"
 	"log"
 )
 
@@ -14,7 +15,7 @@ func ItemSaver() chan interface{} {
 			item := <-itemChan
 			itemCount++
 			log.Printf("itemSaver got item: #%d ,%v", itemCount, item)
-			_, err := save(item)
+			err := save(item)
 			if err != nil {
 				panic(err)
 			}
@@ -22,14 +23,15 @@ func ItemSaver() chan interface{} {
 	}()
 	return itemChan
 }
-func save(item interface{}) (string, error) {
+func save(item interface{}) error {
+	p := item.(model.Person)
 	client, err := elastic.NewClient(elastic.SetSniff(false))
 	if err != nil {
-		return "", err
+		return err
 	}
-	resp, err := client.Index().Index("crawl").Type("zhenai").BodyJson(item).Do(context.Background())
+	_, err = client.Index().Index("crawl").Type("zhenai").Id(p.Id).BodyJson(item).Do(context.Background())
 	if err != nil {
-		return "", err
+		return err
 	}
-	return resp.Id, nil
+	return nil
 }

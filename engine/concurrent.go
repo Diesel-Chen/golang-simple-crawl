@@ -1,5 +1,7 @@
 package engine
 
+import "time"
+
 type ConcurrentEngine struct {
 	Scheduler   Scheduler
 	WorkerCount int
@@ -13,8 +15,10 @@ type Scheduler interface {
 	Run()
 }
 
-func (e *ConcurrentEngine) Run(seed ...Request) {
+var t = time.Tick(10 * time.Millisecond)
 
+func (e *ConcurrentEngine) Run(seed ...Request) {
+	<-t
 	out := make(chan RequestResult)
 	e.Scheduler.Run()
 	for i := 0; i < e.WorkerCount; i++ {
