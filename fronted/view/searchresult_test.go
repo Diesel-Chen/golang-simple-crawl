@@ -14,7 +14,7 @@ func TestSearchResultView_Render(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	item := make([]model2.Person, 0)
+	item := make([]interface{}, 0)
 	m := model2.Person{
 		Id:             "123123",
 		Url:            "http://test/123123",
