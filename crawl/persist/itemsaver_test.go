@@ -24,7 +24,7 @@ func TestSave(t *testing.T) {
 		WorkStation:    "上海",
 		MarriageStatus: "未婚",
 	}
-	err := save(excepted)
+	err := Save(excepted)
 	if err != nil {
 		panic(err)
 	}

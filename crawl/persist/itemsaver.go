@@ -16,7 +16,7 @@ func ItemSaver() chan interface{} {
 			item := <-itemChan
 			itemCount++
 			log.Printf("itemSaver got item: #%d ,%v", itemCount, item)
-			err := save(item)
+			err := Save(item)
 			if err != nil {
 				panic(err)
 			}
@@ -24,7 +24,7 @@ func ItemSaver() chan interface{} {
 	}()
 	return itemChan
 }
-func save(item interface{}) error {
+func Save(item interface{}) error {
 	p := item.(model.Person)
 	client, err := elastic.NewClient(elastic.SetSniff(false))
 	if err != nil {
