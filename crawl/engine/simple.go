@@ -19,6 +19,7 @@ func (e SimpleEngine) Run(seed ...Request) {
 		requests = append(requests, result.Requests...)
 		for _, item := range result.Items {
 			log.Printf("got item : %s\n", item)
+
 		}
 	}
 }
